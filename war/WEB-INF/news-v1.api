@@ -1,0 +1,109 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://shagai1111.appspot.com/_ah/api",
+  "name" : "news",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://shagai1111.appspot.com/_ah/spi",
+    "deadline" : 10.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "news.all" : {
+      "path" : "map_integer_article",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "portal.news.NewsHandler.getAll",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "news.create" : {
+      "path" : "createArticle",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "portal.news.NewsHandler.createArticle",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "JsonMap" : {
+        "id" : "JsonMap",
+        "type" : "object"
+      },
+      "Article" : {
+        "id" : "Article",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "summary" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Message" : {
+        "id" : "Message",
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "$ref" : "JsonMap"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "portal.news.NewsHandler.getAll" : {
+        "response" : {
+          "$ref" : "JsonMap"
+        }
+      },
+      "portal.news.NewsHandler.createArticle" : {
+        "request" : {
+          "$ref" : "Article"
+        },
+        "response" : {
+          "$ref" : "Message"
+        }
+      }
+    }
+  }
+}

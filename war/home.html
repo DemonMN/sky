@@ -1,0 +1,47 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-resource.min.js"></script>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+<script>
+	var userModule = angular.module('userModule', []);
+
+	userModule.controller('userController', function($scope, $http) {
+		$scope.registerUrl = location.protocol+'//'+location.hostname + (location.port ? ':' + location.port: '') + '/register';
+		$scope.users = [];
+		$scope.user = [
+			{'name':'name'},
+			{'name':'email'},
+			{'name':'gender'},
+			{'name':'birthday'},
+			{'name':'phone', 'description':'Phone Number', 'type':'text'}       
+		];
+		$http({method: 'GET', url: '/_ah/api/users/v1/facebookusercollection'}).
+			success(function(data, status, headers, config) {
+				$scope.users = data.items;
+			});
+	});
+</script>
+</head>
+<body ng-app="userModule" ng-controller="userController" >
+	<div id="fb-root"></div>
+	<script>
+		FB.init({
+			appId : '236027393115554',
+			status : true, // check login status
+			cookie : true, // enable cookies to allow the server to access the session
+			xfbml : true
+		});
+	</script>
+	<fb:registration fields="{{user}}" fb_only="true" fb_register="true" redirect-uri="{{registerUrl}}" ></fb:registration>
+	
+	<ul class="unstyled">
+		<li ng-repeat="user in users">
+			<img src="https://graph.facebook.com/{{user.userId}}/picture?type=large">
+		</li>
+	</ul>
+
+	<div class="fb-comments" data-href="" data-numposts="5"></div>
+</body>
+</html>
