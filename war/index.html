@@ -1,27 +1,190 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
-<!-- above set at the top of the file will set     -->
-<!-- the browser's rendering engine into           -->
-<!-- "Quirks Mode". Replacing this declaration     -->
-<!-- with a "Standards Mode" doctype is supported, -->
-<!-- but may lead to some differences in layout.   -->
+<html ng-app="app">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular-resource.min.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=init"></script>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&subset=latin,cyrillic-ext,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic&subset=latin,cyrillic-ext,greek,cyrillic,latin-ext,vietnamese,greek-ext' rel='stylesheet' type='text/css'>
+<style>
+body {
+	font-family: 'Roboto Condensed', 'PT Sans Narrow', 'Open Sans Condensed', sans-serif;
+	text-align: center;
+	font-size: 100%;
+}
 
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Hello App Engine</title>
-  </head>
+.divider.down {
+	background-image: url("/img/divider_down.png");
+	height: 62px;
+	margin-bottom: -62px;
+}
 
-  <body>
-    <h1>Hello App Engine!</h1>
+#gallery {
+	height: 494px;
+	font-size: 12px;
+	height: 494px;
+	position: relative;
+	z-index: 1;
+}
+
+#gallery .gallery-scrim {
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	background-size: 106px 478px;
+	height: 478px;
+	position: absolute;
+	top: 0;
+	width: 106px;
+	z-index: 1001;
+}
+
+#gallery .gallery-scrim.right {
+	background-image: url("/img/right_scrim.png");
+	right: 0;
+}
+
+#gallery .gallery-scrim.left {
+	background-image: url("/img/left_scrim.png");
+	left: 0;
+}
+
+#gallery:before,#gallery:after {
+	content: "";
+	display: block;
+	height: 10px;
+	position: absolute;
+	width: 980px;
+	z-index: 1001;
+}
+
+#main {
+	margin: 0 auto;
+	color: #444444;
+	text-shadow: 0 1px 3px #999999;
+	width: 980px;
+}
+
+#registration {
 	
-    <table>
-      <tr>
-        <td colspan="2" style="font-weight:bold;">Available Servlets:</td>        
-      </tr>
-      <tr>
-        <td><a href="sky">Sky</a></td>
-      </tr>
-    </table>
-  </body>
+}
+
+.message {
+	width: 600px;
+	margin: 0 auto;
+	color: #333333;
+	text-align: left;
+	font-weight: 300;
+	padding: 30px 15px;
+}
+
+.message h3 {
+	font-size: 45px;
+	line-height: 50px;
+	margin: 0 0 30px;
+	line-height: 50px;
+}
+
+.message p {
+	font-weight: 400;
+	line-height: 25px;
+	text-align: left;
+}
+
+.message p span {
+	color: #4183C4;
+}
+
+.message .button-primary {
+	float: right;
+	width: 100px;
+}
+
+a {
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.button-primary {
+	background-color: #4D90FE;
+	background-image: -moz-linear-gradient(center top, #4D90FE, #4787ED);
+	border: 1px solid #3079ED;
+	box-shadow: none;
+	border-radius: 2px;
+	font-size: 11px;
+	font-weight: bold;
+	height: auto;
+	line-height: 16px;
+	padding-bottom: 6px;
+	padding-top: 5px;
+	white-space: normal;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.button-primary:hover {
+	background: -moz-linear-gradient(center top, #4D90FE, #357AE8) repeat
+		scroll 0 0 rgba(0, 0, 0, 0);
+	border-color: #2F5BB7;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+}
+</style>
+
+<script>
+	FB.init({
+		appId : '236027393115554',
+		status : true, // check login status
+		cookie : true, // enable cookies to allow the server to access the session
+		xfbml : true
+	});
+	var app = angular.module("app", []);
+
+	app.config(function($routeProvider) {
+		$routeProvider
+		.when('/', {templateUrl : "news.html"})
+		.when('/reg', {templateUrl : "registration.html", controller: "userController"})
+	});
+	
+	app.controller('userController', function($scope, $http) {
+		$scope.registerUrl = location.protocol+'//'+location.hostname + (location.port ? ':' + location.port: '') + '/register';
+		$scope.users = [];
+		$scope.user = [
+			{'name':'name'},
+			{'name':'email'},
+			{'name':'gender'},
+			{'name':'birthday'},
+			{'name':'phone', 'description':'Phone Number', 'type':'text'}       
+		];
+		$scope.$on('$viewContentLoaded', function() {
+			FB.XFBML.parse();
+		});
+		
+	});
+</script>
+</head>
+<body>
+	<div id="fb-root"></div>
+	
+	<section id="header">
+		<div class="message">
+			<h2>Сонирхолтой мэдээлэл</h2>
+			<p>
+				Таны илгээсэн мэдээлэл 1 үзэх бүр <span>1т</span><br />бусдад таалагдвал <span>10т</span> <a href="#/reg" class="button-primary">элсэх</a>
+			</p>
+		</div>
+	</section>
+	<div class="divider down"></div>
+	<section id="main">
+		<p>Фото мэдээлэл</p>
+		<p></p>
+		<div id="gallery">
+			<div class="gallery-scrim left"></div>
+			<div ng-view class="gallery "></div>
+			<div class="gallery-scrim right"></div>
+		</div>
+
+	</section>
+	<div class="divider down"></div>
+</body>
 </html>

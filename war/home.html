@@ -7,21 +7,7 @@
 <script>
 	var userModule = angular.module('userModule', []);
 
-	userModule.controller('userController', function($scope, $http) {
-		$scope.registerUrl = location.protocol+'//'+location.hostname + (location.port ? ':' + location.port: '') + '/register';
-		$scope.users = [];
-		$scope.user = [
-			{'name':'name'},
-			{'name':'email'},
-			{'name':'gender'},
-			{'name':'birthday'},
-			{'name':'phone', 'description':'Phone Number', 'type':'text'}       
-		];
-		$http({method: 'GET', url: '/_ah/api/users/v1/facebookusercollection'}).
-			success(function(data, status, headers, config) {
-				$scope.users = data.items;
-			});
-	});
+	
 </script>
 </head>
 <body ng-app="userModule" ng-controller="userController" >
@@ -39,9 +25,11 @@
 	<ul class="unstyled">
 		<li ng-repeat="user in users">
 			<img src="https://graph.facebook.com/{{user.userId}}/picture?type=large">
+			
 		</li>
 	</ul>
-
+	{{albums}}
+    <div class="fb-like" data-href="" fb_only="true" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
 	<div class="fb-comments" data-href="" data-numposts="5"></div>
 </body>
 </html>

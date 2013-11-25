@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Transaction;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.http.HttpServlet;
@@ -22,17 +26,20 @@ public class SkyServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		resp.setContentType("text/plain");
 
-		EntityManagerFactory emf = DBAccess.getFactory();
+		PersistenceManagerFactory factory = DBAccess.getFactory();
 
-		EntityManager em = emf.createEntityManager();
-		em = emf.createEntityManager();
-		em.getTransaction().begin();
-		List<FacebookUser> result = em.createQuery("SELECT g FROM FacebookUser g").getResultList();
-		for (FacebookUser user : result) {
-			resp.getWriter().println(user.toString());
+		PersistenceManager manager = factory.getPersistenceManager();
+		Transaction transaction = manager.currentTransaction();
+		manager.currentTransaction();
+		try{
+			Extent<FacebookUser> result = manager.getExtent(FacebookUser.class);
+			for (FacebookUser user : result) {
+				resp.getWriter().println(user.toString());
+			}
 		}
-		em.getTransaction().commit();
-		em.close();
+		finally{
+			DBAccess.close(manager, transaction);
+		}
 		resp.getWriter().println("Hello, world");
 		resp.getWriter().flush();
 	}
@@ -44,12 +51,15 @@ public class SkyServlet extends HttpServlet {
 		FacebookUser user = mapper.convertValue(map.get("registration"), FacebookUser.class);
 		user.setUserId(map.get("user_id").toString());
 		
-		EntityManagerFactory emf = DBAccess.getFactory();
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		em.merge(user);
-		em.getTransaction().commit();
-		em.close();
+		PersistenceManagerFactory factory = DBAccess.getFactory();
+
+		PersistenceManager manager = factory.getPersistenceManager();
+		Transaction transaction = manager.currentTransaction();
+		
+		transaction.begin();
+		manager.makePersistent(user);
+		transaction.commit();
+		manager.close();
 
 	}
 }

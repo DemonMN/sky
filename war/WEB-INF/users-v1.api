@@ -39,22 +39,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "users.create" : {
-      "path" : "createUser",
-      "httpMethod" : "POST",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "portal.PortalServlet.createUser",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "users.user.get" : {
       "path" : "users/{id}",
       "httpMethod" : "GET",
@@ -119,33 +103,12 @@
             }
           }
         }
-      },
-      "User" : {
-        "id" : "User",
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "name" : {
-            "type" : "string"
-          }
-        }
       }
     },
     "methods" : {
       "portal.PortalServlet.getUsers" : {
         "response" : {
           "$ref" : "FacebookUserCollection"
-        }
-      },
-      "portal.PortalServlet.createUser" : {
-        "request" : {
-          "$ref" : "User"
-        },
-        "response" : {
-          "$ref" : "User"
         }
       },
       "portal.PortalServlet.getUser" : {
