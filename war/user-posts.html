@@ -1,0 +1,127 @@
+<aside id="left-panel">
+	<div class="login-info" style="">
+		<span>
+			<img src="https://graph.facebook.com/{{me.id}}/picture?width=32&height=32" />
+			<a id="show-shortcut" href="javascript:void(0);">{{me.name}}<i class="fa fa-angle-down"></i></a>
+		</span>
+	</div>
+</aside>
+<ul class="list-group col-md-4">
+	<li ng-hide="me.posts" class="list-group-item">
+		<h5>Мэдээ оруулаагүй байна</h5>
+	</li>
+	<li ng-repeat="album in albums | filter:query" class="list-group-item">
+		<img src="https://graph.facebook.com/{{album.cover_photo}}/picture?type=album&access_token={{token}}" />
+		{{album.name}}
+	</li>
+	<li ng-repeat="post in me.posts | filter:query" class="list-group-item">
+		<div class="media">
+			<div class="pull-left">
+				<img class="media-object" src="https://graph.facebook.com/{{post.userId}}/picture" />
+			</div>
+			<div class="media-body">
+				<h4 class="media-heading">{{post.title}}</h4>
+				<h5>{{post.user.name}}</h5>
+				<h5>{{post.date}} {{post.category.name}} Уншсан тоо : {{post.visited}}</h5>
+				<button type="button" ng-click="edit(post)" class="btn btn-mini btn-primary">Засах</button>
+				<button type="button" ng-click="removePost(post)" class="btn btn-mini btn-primary">Устгах</button>
+			</div>
+		</div>
+	</li>
+	
+</ul>
+<div class="col-md-8">
+	<form class="list-group" id="fileupload" action="/upload" method="POST" enctype="multipart/form-data" data-ng-app="demo" data-ng-controller="photoController" data-file-upload="options" data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class=" fileupload-buttonbar list-group-item clearfix">
+            <div class="col-lg-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Add files...</span>
+                    <input type="file" name="files[]" multiple ng-disabled="disabled">
+                </span>
+                <button type="button" class="btn btn-primary start" data-ng-click="submit()">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="button" class="btn btn-warning cancel" data-ng-click="cancel()">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>
+                <!-- The global file processing state -->
+                <span class="fileupload-process"></span>
+            </div>
+            <!-- The global progress state -->
+            <div class="col-lg-5 fade" data-ng-class="{in: active()}">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active col-lg-5" data-file-upload-progress="progress()"><div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div></div>
+                <!-- The extended global progress state -->
+                <div class="progress-extended col-lg-5">&nbsp;</div>
+            </div>
+        </div>
+        <!-- The table listing the files available for upload/download -->
+        <table class="table table-striped files ng-cloak">
+            <tr data-ng-repeat="file in queue" data-ng-class="{'processing': file.$processing()}">
+                <td data-ng-switch data-on="!!file.thumbnailUrl">
+                    <div class="preview" data-ng-switch-when="true">
+                        <a data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery><img data-ng-src="{{file.thumbnailUrl}}" alt=""></a>
+                    </div>
+                    <div class="preview" data-ng-switch-default data-file-upload-preview="file"></div>
+                </td>
+                <td>
+                    <p class="name" data-ng-switch data-on="!!file.url">
+                        <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+                            <a data-ng-switch-when="true" data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery>{{file.name}}</a>
+                            <a data-ng-switch-default data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}">{{file.name}}</a>
+                        </span>
+                        <span data-ng-switch-default>{{file.name}}</span>
+                    </p>
+                    <strong data-ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+                </td>
+                <td>
+                    <p class="size">{{file.size | formatFileSize}}</p>
+                    <div class="progress progress-striped active fade" data-ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()"><div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div></div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary start" data-ng-click="file.$submit()" data-ng-hide="!file.$submit || options.autoUpload" data-ng-disabled="file.$state() == 'pending' || file.$state() == 'rejected'">
+                        <i class="glyphicon glyphicon-upload"></i>
+                        <span>Start</span>
+                    </button>
+                    <button type="button" class="btn btn-warning cancel" data-ng-click="file.$cancel()" data-ng-hide="!file.$cancel">
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                        <span>Cancel</span>
+                    </button>
+                    <button data-ng-controller="FileDestroyController" type="button" class="btn btn-danger destroy" data-ng-click="file.$destroy()" data-ng-hide="!file.$destroy">
+                        <i class="glyphicon glyphicon-trash"></i>
+                        <span>Delete</span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </form>
+	<form name="form" ng-class="{error: form.name.$invalid}">
+		<ul class="list-group">
+
+			<li class="list-group-item">
+				<div class="form-group">
+					<label>Гарчиг</label> <input ng-model="post.title" type="text" class="form-control input-sm" required placeholder="Гарчиг"> <span ng-show="myForm.name.$error.required" class="help-inline">Required</span>
+				</div>
+			</li>			
+			<li class="list-group-item">
+				<div class="form-group">
+					<textarea ng-model="post.summary.value" redactor="{air: true}" class="form-control" cols="30" rows="10"></textarea>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<div class="form-group">
+					<button ng-click="send()" ng-disabled="isClean() || form.$invalid" class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">Post</button>
+				</div>
+			</li>
+		</ul>
+	</form>
+</div>
+
+
+
+

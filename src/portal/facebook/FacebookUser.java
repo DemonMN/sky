@@ -1,6 +1,8 @@
 package portal.facebook;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -9,42 +11,85 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.appengine.api.datastore.Key;
+import com.restfb.types.User;
 
 @XmlRootElement(name = "user")
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class FacebookUser {
+public class FacebookUser implements Serializable {
+	private static final long serialVersionUID = -2269400161068704490L;
 	@PrimaryKey
-	@Persistent(valueStrategy = IdGeneratorStrategy.SEQUENCE)
-	private Long id;
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    private Key key;
 	
-	private String userId;
+	private String id;
 	
 	private String name;
 	
-	private String email;
-	
-	private String gender;
+	private User user;
 
-	@JsonFormat(pattern = "MM/dd/yyyy")
-	private Date birthday;
+	@Persistent
+	private List<Contact> contacts;
 	
-	private String phone;
+	private UserType type;
+	
+	
+	public FacebookUser(User user) {
+		this.user = user;
+		if (user != null) {
+			id = user.getId();
+		}
+		if (user != null) {
+			name = user.getName();
+		}
+	}
 
-	public Long getId() {
+	public void addContact(Contact contact){
+		if (contacts == null){
+			contacts = new ArrayList<Contact>();
+		}
+		contacts.add(contact);
+	}
+	
+	public List<Contact> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<Contact> contacts) {
+		this.contacts = contacts;
+	}
+
+
+	public Key getKey() {
+		return key;
+	}
+
+	public void setKey(Key key) {
+		this.key = key;
+	}
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getUserId() {
-		return userId;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
 	}
 
 	public String getName() {
@@ -55,43 +100,13 @@ public class FacebookUser {
 		this.name = name;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-	public Date getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
 	@Override
 	public String toString() {
-		return "FacebookUser [id=" + id + ", user_id=" + userId + ", name="
-				+ name + ", email=" + email + ", gender=" + gender
-				+ ", birthday=" + birthday + ", phone=" + phone + "]";
+		StringBuffer buffer = new StringBuffer("FacebookUser [name=");
+		buffer.append(name);
+		buffer.append(", type=");
+		buffer.append(type);
+		buffer.append("]");		
+		return buffer.toString();
 	}
-
 }

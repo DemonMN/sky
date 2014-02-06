@@ -1,0 +1,8 @@
+<input type="text" ng-model="survey.name" />
+<input type="button" ng-click="create()" value="create"/>
+<ul class="list-group">
+	<li ng-repeat="survey in surveys" class="list-group-item">
+		{{survey.name}}
+		<a href="#/survey/?survey={{survey.key.id}}&question={{question.key.id}}">edit</a>
+	</li>
+</ul>

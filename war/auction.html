@@ -1,0 +1,7 @@
+<a href="" ng-click="bid()" >Нэмэх</a>
+{{message}}
+<ul class="list-group col-md-7">
+	<li ng-repeat="bid in bids | filter:query" class="list-group-item"  >
+		{{bid}}
+	</li>
+</ul>

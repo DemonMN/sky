@@ -1,5 +1,26 @@
-УИХ-ын гишүүн Н.Номтойбаяр мунзуй хочит Г.Нямдорж нар муудалцаж, хүн хутгалсан эсэх талаар хэрэг үүсгэн шалгаж байгаа. Тэгвэл УИХ-ын гишүүн Н.Номтойбаяр маргааш 12:30-д Монгол ньюс мэдээллийн төвд хэвлэлийн хурал хийхээр болсноо зарлалаа. 
-
- 
-
-Б.Мягмар 
+<style>
+	.list-group-item{
+		float: left;
+		width: 360px;
+		height: 120px;
+		margin-right: 20px;
+	}
+</style>
+<ul class="list-group">
+	<li ng-repeat="post in posts | filter:query" class="list-group-item">
+		<div class="media">
+			<div class="pull-left">
+				<img class="media-object" src="https://graph.facebook.com/{{post.userId}}/picture" />
+			</div>
+			<div class="media-body">
+				<h4 class="media-heading">{{post.title}}</h4>
+				<h5>{{post.userName}}</h5>
+				<h5>
+					{{post.date}} {{post.category.name}} Уншсан тоо : {{post.visited}} <a href="" ng-click="read(post)">Дэлгэрэнгүй...</a>
+				</h5>
+				<p>{{post.summary.begin}}</p>
+				<p ng-bind-html="post.read" ng-show="post.read"></p>
+			</div>
+		</div>
+	</li>
+</ul>

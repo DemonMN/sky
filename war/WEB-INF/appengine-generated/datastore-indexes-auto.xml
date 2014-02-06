@@ -1,4 +1,16 @@
-<!-- Indices written at Mon, 25 Nov 2013 11:40:48 CST -->
+<!-- Indices written at Wed, 5 Feb 2014 12:18:01 CST -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="FacebookUser" ancestor="false" source="auto">
+        <property name="id" direction="asc"/>
+        <property name="__key__" direction="desc"/>
+    </datastore-index>
+
+    <!-- Used 10 times in query history -->
+    <datastore-index kind="Trip" ancestor="false" source="auto">
+        <property name="__key__" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>

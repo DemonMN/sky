@@ -1,0 +1,41 @@
+<style>
+	.border-less{
+		border: none;
+		box-shadow: none;
+		
+	}
+	#photoset-grid-basic {
+		padding-left: 10px;
+		text-align: center;
+	}
+	#photoset-grid-basic .box{
+		width: 225px;
+	}
+	#photoset-grid-basic .box img{
+		width: 190px;
+	}
+	#photoset-grid-basic .box{
+		display: inline-block;
+		height: 120px;
+		overflow: hidden;
+		text-align: center;
+		vertical-align: middle;
+		cursor: pointer;
+	}
+</style>
+<div class="panel" ng-controller="galleryController">
+	<div id="photoset-grid-basic" >
+		<div ng-repeat="file in photos | filter:query" class="box list-group border-less" onclick="show(this)" ng-click="show(file)">
+			<div ng-show="file.mediaLink" class="list-group-item border-less">
+				<img src="{{file.mediaLink}}" />
+			</div>
+			<div class="list-group-item border-less ">
+				<div class="fb-like" data-href="http://www.skynews.mn/#/photo/view?large={{file.selfLink}}&token={{pageToken}}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+			</div>
+			<div class="list-group-item border-less">
+				<div class="fb-comments" data-href="http://www.skynews.mn/#/photo/view?large={{file.selfLink}}&token={{pageToken}}" data-numposts="5" data-colorscheme="light"></div>
+			</div>
+		</div>
+	</div>
+	<button class="btn btn-block  btn-primary" ng-click="next()">Load more...</button>
+</div>
